@@ -31,5 +31,5 @@ if not exist ".env" (
 )
 
 REM Run the application
-echo Starting Flask server on http://localhost:5000
+echo Starting Flask server on http://localhost:5001
 python app.py

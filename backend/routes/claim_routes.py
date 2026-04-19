@@ -9,7 +9,7 @@ claim_bp = Blueprint('claims', __name__)
 def create_claim():
     """Create a new claim request"""
     try:
-        user_id = get_jwt_identity()
+        user_id = int(get_jwt_identity())
         data = request.get_json()
         
         lost_item_id = data.get('lost_item_id')
@@ -35,7 +35,7 @@ def create_claim():
 def get_my_claims():
     """Get current user's claims"""
     try:
-        user_id = get_jwt_identity()
+        user_id = int(get_jwt_identity())
         claims = ClaimService.get_user_claims(user_id)
         
         return jsonify({

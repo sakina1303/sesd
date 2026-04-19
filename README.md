@@ -11,7 +11,7 @@ This system improves the efficiency of recovering lost items and demonstrates st
 
 ---
 
-##  Problem Statement
+## Problem Statement
 
 Losing personal belongings in public places like colleges, offices, airports, and malls is common. Traditional lost and found systems are manual and inefficient.
 
@@ -19,32 +19,32 @@ This system provides a centralized platform with AI-powered matching to help use
 
 ---
 
-##  Key Features
+## Key Features
 
 ### User Features
--  User Registration and Login (JWT Authentication)
--  Report Lost Items with description, image, and location
--  Report Found Items to help others
--  AI-powered matching suggestions with confidence scores
--  Submit claim requests for matched items
--  View claim status and history
--  Personal dashboard with statistics
+- User Registration and Login (JWT Authentication)
+- Report Lost Items with description, image, and location
+- Report Found Items to help others
+- AI-powered matching suggestions with confidence scores
+- Submit claim requests for matched items
+- View claim status and history
+- Personal dashboard with statistics
 
 ### Admin Features
--  View all users
--  View all lost and found items
--  Approve or reject claim requests
--  System analytics and management
+- View all users
+- View all lost and found items
+- Approve or reject claim requests
+- System analytics and management
 
 ### AI Features
--  Text similarity matching using Gemini/OpenAI API
--  Confidence scoring for matches
--  Automatic match suggestions
--  Fallback to basic matching if API unavailable
+- Text similarity matching using Gemini/OpenAI API
+- Confidence scoring for matches
+- Automatic match suggestions
+- Fallback to basic matching if API unavailable
 
 ---
 
-##  System Architecture
+## System Architecture
 
 The backend follows **clean architecture principles**:
 
@@ -60,7 +60,7 @@ This ensures **scalability, modularity, and maintainability**.
 
 ---
 
-##  Tech Stack
+## Tech Stack
 
 ### Frontend
 - React.js 18
@@ -82,7 +82,26 @@ This ensures **scalability, modularity, and maintainability**.
 
 ---
 
-##  Project Structure
+## Implemented Modules
+
+### Backend
+- Flask app bootstrap and configuration
+- SQLAlchemy models for users, lost items, found items, and claims
+- Repository layer for database access
+- Service layer for authentication, item handling, claims, and AI matching
+- JWT-protected REST routes for auth, items, claims, and admin workflows
+- File upload handling and admin access control
+
+### Frontend
+- React app with Vite and Material UI
+- Authentication flow with login, registration, and token persistence
+- Protected dashboard, lost item, found item, claims, and admin pages
+- AI match browsing and claim submission UI
+- API client with backend proxy integration
+
+---
+
+## Project Structure
 
 ```
 RetrievAI/
@@ -120,7 +139,7 @@ RetrievAI/
 
 ---
 
-##  Quick Start
+## Quick Start
 
 ### Prerequisites
 - Python 3.8+
@@ -139,6 +158,10 @@ cp .env.example .env
 python app.py
 ```
 
+Backend runs on `http://localhost:5001`
+
+The backend uses a local SQLite database by default, so the app can run without a separate database server during development. Set `DATABASE_URL` in `backend/.env` if you want PostgreSQL or MySQL.
+
 ### Frontend Setup
 ```bash
 cd frontend
@@ -150,10 +173,12 @@ npm run dev
 
 ---
 
-##  Documentation
+## Documentation
 
-- **[SETUP_GUIDE.md](SETUP_GUIDE.md)** - Complete installation and configuration guide
 - **[QUICKSTART.md](QUICKSTART.md)** - Get started in 5 minutes
+- **[SETUP_GUIDE.md](SETUP_GUIDE.md)** - Complete installation and configuration guide
+- **[DEPLOYMENT.md](DEPLOYMENT.md)** - Deploy to Render (production)
+- **[RENDER_QUICKSTART.md](RENDER_QUICKSTART.md)** - Quick Render deployment (3 steps)
 - **[API_TESTING.md](API_TESTING.md)** - API testing with cURL and Postman
 - **[idea.md](idea.md)** - Original project concept
 - **Diagrams** - See useCaseDiagram.md, sequenceDiagram.md, classDiagram.md, ErDiagram.md
@@ -170,7 +195,7 @@ npm run dev
 
 ---
 
-##  Authentication
+## Authentication
 
 The system uses **JWT (JSON Web Tokens)** for secure authentication:
 - Passwords are hashed using Werkzeug
@@ -179,7 +204,7 @@ The system uses **JWT (JSON Web Tokens)** for secure authentication:
 
 ---
 
-##  AI Matching
+## AI Matching
 
 The AI matching service:
 1. Compares text descriptions of lost and found items
@@ -188,15 +213,27 @@ The AI matching service:
 4. Provides match confidence labels (Low, Medium, High, Very High)
 5. Falls back to basic word overlap if API unavailable
 
+### Where AI Scan Happens in UI
+- Lost item flow: `My Lost Items` -> click `Find Matches` on a specific lost item.
+- Found item flow: `My Found Items` -> click `Find Matches` on a specific found item.
+- Each click calls the backend AI match endpoints and shows scored suggestions in a dialog.
+
+### Claim Flow in UI
+1. Report a lost item.
+2. Open `My Lost Items` and run `Find Matches`.
+3. Click `Claim` on a matching found item.
+4. Track status (`pending`, `approved`, `rejected`) in `My Claims`.
+5. Admin reviews pending claims in `Admin Dashboard`.
+
 ---
 
-##  Screenshots
+## Screenshots
 
 *Coming soon - Add screenshots of your application here*
 
 ---
 
-##  Testing
+## Testing
 
 Test the system by:
 1. Registering a user account
@@ -208,7 +245,7 @@ Test the system by:
 
 ---
 
-##  Contributing
+## Contributing
 
 Contributions are welcome! Please:
 1. Fork the repository
@@ -219,19 +256,19 @@ Contributions are welcome! Please:
 
 ---
 
-##  License
+## License
 
 This project is licensed under the MIT License.
 
 ---
 
-##  Authors
+## Authors
 
 - Initial development for educational purposes
 
 ---
 
-##  Acknowledgments
+## Acknowledgments
 
 - Google Gemini / OpenAI for AI APIs
 - Flask and React communities
@@ -239,7 +276,7 @@ This project is licensed under the MIT License.
 
 ---
 
-##  Support
+## Support
 
 For issues and questions:
 - Open an issue on GitHub
@@ -247,7 +284,7 @@ For issues and questions:
 
 ---
 
-##  Future Enhancements
+## Future Enhancements
 
 - [ ] Image similarity using computer vision
 - [ ] Email notifications

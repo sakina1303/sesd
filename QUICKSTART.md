@@ -24,7 +24,7 @@ cp .env.example .env
 python app.py
 ```
 
-Backend runs on: http://localhost:5000
+Backend runs on: http://localhost:5001
 
 ## 2. Frontend Setup (3 minutes)
 

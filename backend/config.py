@@ -10,7 +10,7 @@ class Config:
     # Database Configuration
     SQLALCHEMY_DATABASE_URI = os.environ.get(
         'DATABASE_URL', 
-        'postgresql://localhost/lost_and_found_db'
+        'sqlite:///lost_and_found.db'
     )
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     

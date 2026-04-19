@@ -24,7 +24,7 @@ class AuthService:
         
         # Create JWT token with user data
         access_token = create_access_token(
-            identity=user.id,
+            identity=str(user.id),
             additional_claims={
                 'email': user.email,
                 'name': user.name,
@@ -40,4 +40,12 @@ class AuthService:
     @staticmethod
     def get_user_by_id(user_id):
         """Get user by ID"""
+        if user_id is None:
+            return None
+
+        try:
+            user_id = int(user_id)
+        except (TypeError, ValueError):
+            return None
+
         return UserRepository.find_by_id(user_id)

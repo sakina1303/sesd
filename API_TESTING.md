@@ -4,7 +4,7 @@
 
 ### 1. Register User
 ```bash
-curl -X POST http://localhost:5000/api/auth/register \
+curl -X POST http://localhost:5001/api/auth/register \
   -H "Content-Type: application/json" \
   -d '{
     "name": "John Doe",
@@ -15,7 +15,7 @@ curl -X POST http://localhost:5000/api/auth/register \
 
 ### 2. Login
 ```bash
-curl -X POST http://localhost:5000/api/auth/login \
+curl -X POST http://localhost:5001/api/auth/login \
   -H "Content-Type: application/json" \
   -d '{
     "email": "john@example.com",
@@ -29,7 +29,7 @@ Save the `access_token` from the response.
 ```bash
 TOKEN="your-jwt-token-here"
 
-curl -X POST http://localhost:5000/api/items/lost \
+curl -X POST http://localhost:5001/api/items/lost \
   -H "Authorization: Bearer $TOKEN" \
   -F "name=iPhone 13 Pro" \
   -F "description=Blue iPhone 13 Pro with cracked screen" \
@@ -38,13 +38,13 @@ curl -X POST http://localhost:5000/api/items/lost \
 
 ### 4. Get AI Matches
 ```bash
-curl -X GET http://localhost:5000/api/items/lost/1/matches \
+curl -X GET http://localhost:5001/api/items/lost/1/matches \
   -H "Authorization: Bearer $TOKEN"
 ```
 
 ### 5. Submit Claim
 ```bash
-curl -X POST http://localhost:5000/api/claims/ \
+curl -X POST http://localhost:5001/api/claims/ \
   -H "Authorization: Bearer $TOKEN" \
   -H "Content-Type: application/json" \
   -d '{
@@ -56,7 +56,7 @@ curl -X POST http://localhost:5000/api/claims/ \
 ## Using Postman
 
 1. Import the API collection (create a Postman collection)
-2. Set environment variable `baseUrl` = `http://localhost:5000/api`
+2. Set environment variable `baseUrl` = `http://localhost:5001/api`
 3. Set environment variable `token` after login
 4. Use `{{token}}` in Authorization header
 

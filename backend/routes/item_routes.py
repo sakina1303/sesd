@@ -11,7 +11,7 @@ item_service = ItemService()
 def create_lost_item():
     """Create a new lost item report"""
     try:
-        user_id = get_jwt_identity()
+        user_id = int(get_jwt_identity())
         
         # Handle multipart/form-data
         name = request.form.get('name')
@@ -43,7 +43,7 @@ def create_lost_item():
 def create_found_item():
     """Create a new found item report"""
     try:
-        user_id = get_jwt_identity()
+        user_id = int(get_jwt_identity())
         
         # Handle multipart/form-data
         name = request.form.get('name')
@@ -123,7 +123,7 @@ def get_found_item(item_id):
 def get_my_lost_items():
     """Get current user's lost items"""
     try:
-        user_id = get_jwt_identity()
+        user_id = int(get_jwt_identity())
         items = item_service.get_user_lost_items(user_id)
         return jsonify({
             'items': [item.to_dict() for item in items]
@@ -136,7 +136,7 @@ def get_my_lost_items():
 def get_my_found_items():
     """Get current user's found items"""
     try:
-        user_id = get_jwt_identity()
+        user_id = int(get_jwt_identity())
         items = item_service.get_user_found_items(user_id)
         return jsonify({
             'items': [item.to_dict() for item in items]
@@ -177,7 +177,7 @@ def get_matches_for_found_item(item_id):
 def delete_lost_item(item_id):
     """Delete a lost item"""
     try:
-        user_id = get_jwt_identity()
+        user_id = int(get_jwt_identity())
         item_service.delete_lost_item(item_id, user_id)
         return jsonify({'message': 'Lost item deleted successfully'}), 200
     except ValueError as e:
@@ -192,7 +192,7 @@ def delete_lost_item(item_id):
 def delete_found_item(item_id):
     """Delete a found item"""
     try:
-        user_id = get_jwt_identity()
+        user_id = int(get_jwt_identity())
         item_service.delete_found_item(item_id, user_id)
         return jsonify({'message': 'Found item deleted successfully'}), 200
     except ValueError as e:

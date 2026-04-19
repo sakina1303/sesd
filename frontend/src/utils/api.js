@@ -1,6 +1,7 @@
 import axios from 'axios'
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000/api'
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5001/api'
+const API_ORIGIN = API_BASE_URL.replace(/\/api\/?$/, '')
 
 const api = axios.create({
   baseURL: API_BASE_URL,
@@ -22,6 +23,35 @@ api.interceptors.request.use(
     return Promise.reject(error)
   }
 )
+
+// Handle auth/session failures in one place.
+api.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    const status = error?.response?.status
+    const path = error?.config?.url || ''
+    const details = `${error?.response?.data?.error || ''} ${error?.response?.data?.msg || ''}`.toLowerCase()
+    const isAuthPath = path.includes('/auth/login') || path.includes('/auth/register')
+    const looksLikeTokenError = details.includes('token') || details.includes('subject') || status === 422
+
+    if (!isAuthPath && (status === 401 || looksLikeTokenError)) {
+      localStorage.removeItem('token')
+      if (window.location.pathname !== '/login') {
+        window.location.href = '/login'
+      }
+    }
+
+    return Promise.reject(error)
+  }
+)
+
+export const buildImageUrl = (imageName) => {
+  if (!imageName) return ''
+  if (imageName.startsWith('http://') || imageName.startsWith('https://')) {
+    return imageName
+  }
+  return `${API_ORIGIN}/uploads/${imageName}`
+}
 
 // Auth APIs
 export const authAPI = {
