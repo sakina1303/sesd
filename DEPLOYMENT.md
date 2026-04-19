@@ -86,8 +86,11 @@ GEMINI_API_KEY=<your-gemini-api-key>
    - Region: Same as your web service
    - Plan: Free ($0/month)
 
-3. Copy the internal database URL from the PostgreSQL service
-4. Add it as `DATABASE_URL` environment variable in your web service
+3. **IMPORTANT:** Wait for the database to finish initializing (5-10 minutes)
+4. Go to your PostgreSQL service page → click "Connections" tab
+5. Copy the **Internal Database URL** (starts with `postgresql://`)
+6. Go back to your **Web Service** → "Environment" settings
+7. Add `DATABASE_URL` with the value you copied
 
 ## Step 5: Configure Environment Variables
 
@@ -98,20 +101,45 @@ In your Render Web Service settings, add these environment variables:
 | `FLASK_ENV` | `production` |
 | `SECRET_KEY` | Generate a random string (use `python -c "import secrets; print(secrets.token_urlsafe(50))"`) |
 | `JWT_SECRET_KEY` | Generate another random string |
+| `DATABASE_URL` | **Internal URL from PostgreSQL service** (very important!) |
+| `AI_PROVIDER` | `gemini` |
+| `GEMINI_API_KEY` | Your Gemini API key |
+
+## Step 6: Fix PostgreSQL Connection Issues
+
+If you get `connection refused` error:
+
+1. **Verify DATABASE_URL is set:**
+   - Go to Web Service → "Environment"
+   - Check that `DATABASE_URL` exists and has the PostgreSQL internal URL
+   - It should look like: `postgresql://user:password@hostname:5432/dbname`
+
+2. **Redeploy the service:**
+   - Go to Web Service → "Manual Deploy"
+   - Click "Latest" to redeploy
+   - This time it should connect to PostgreSQL
+
+3. **Check database status:**
+   - Ensure PostgreSQL service shows "Available" status
+   - Wait a few minutes if it's still initializing
 | `DATABASE_URL` | Internal database URL from PostgreSQL service |
-| `AI_PROVIDER` | `gemini` or `openai` |
-| `GEMINI_API_KEY` | Your Gemini API key (get from [Google AI Studio](https://aistudio.google.com/app/apikey)) |
-| `OPENAI_API_KEY` | Your OpenAI API key (optional, if using OpenAI) |
+## Step 6: Fix PostgreSQL Connection Issues
 
-## Step 6: Generate Secret Keys
+If you get `connection refused` error:
 
-To generate secure secret keys, run this commands locally:
+1. **Verify DATABASE_URL is set:**
+   - Go to Web Service → "Environment"
+   - Check that `DATABASE_URL` exists and has the PostgreSQL internal URL
+   - It should look like: `postgresql://user:password@hostname:5432/dbname`
 
-```bash
-python -c "import secrets; print(secrets.token_urlsafe(50))"
-```
+2. **Redeploy the service:**
+   - Go to Web Service → "Manual Deploy"
+   - Click "Latest" to redeploy
+   - This time it should connect to PostgreSQL
 
-Run this twice to get both `SECRET_KEY` and `JWT_SECRET_KEY`.
+3. **Check database status:**
+   - Ensure PostgreSQL service shows "Available" status
+   - Wait a few minutes if it's still initializing
 
 ## Step 7: Monitor Deployment
 
@@ -135,6 +163,19 @@ VITE_API_BASE_URL=https://your-render-url.onrender.com/api
 
 ```bash
 cd backend
+python init_db.py
+```
+
+This will automatically create tables and an admin user.
+
+**Default Admin Credentials:**
+- Email: `admin@example.com`
+- Password: `admin123`
+
+Or manually create a user:
+
+```bash
+cd backend
 python
 ```
 
@@ -152,6 +193,25 @@ with app.app_context():
 
 ## Troubleshooting
 
+### "Connection refused" or "Failed to connect to localhost:5432"
+
+**This is the most common error.** Solution:
+
+1. **Set DATABASE_URL environment variable:**
+   - In Render Dashboard, go to Web Service → "Environment"
+   - Check if `DATABASE_URL` exists
+   - If missing, add it with the PostgreSQL internal URL
+   - Restart/redeploy the service
+
+2. **Find your PostgreSQL Internal URL:**
+   - Go to PostgreSQL service page → "Connections"
+   - Copy the "Internal Database URL"
+   - Paste it as `DATABASE_URL` in your Web Service environment
+
+3. **Redeploy:**
+   - Web Service → "Manual Deploy" → "Latest"
+   - Watch the logs to confirm it connects
+
 ### Build Fails
 
 Check the build logs:
@@ -162,11 +222,12 @@ Check the build logs:
    - Node version: Render uses Node 18+ by default
    - Build command syntax: Ensure all commands are correct
 
-### Database Connection Error
+### Database Migration Issues
 
-- Verify `DATABASE_URL` is correct in environment variables
-- Check PostgreSQL service is running
-- Run migrations: `flask db upgrade`
+If you get migration errors:
+1. Try using the `init_db.py` script: `python init_db.py`
+2. If that fails, check PostgreSQL service is "Available"
+3. Wait 5-10 minutes for database to initialize completely
 
 ### Frontend Not Showing
 

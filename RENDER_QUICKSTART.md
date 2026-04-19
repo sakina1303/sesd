@@ -13,7 +13,7 @@ git push origin main
 
 - Sign up/login with GitHub at [render.com](https://render.com)
 
-## 3️⃣ Deploy
+## 3️⃣ Deploy Web Service
 
 Click: **"New +" → "Web Service"**
 
@@ -22,38 +22,57 @@ Then:
 2. Render will auto-detect `render.yaml` 
 3. Click "Deploy"
 
-## 4️⃣ Add Database
+## 4️⃣ Create PostgreSQL Database
 
-Render will auto-create PostgreSQL if you have it in `render.yaml`. Copy the **DATABASE_URL**.
+Click: **"New +" → "PostgreSQL"**
 
-## 5️⃣ Set Environment Variables
+Config:
+- Name: `retrievai-db`
+- Database: `retrievai`
+- User: `retrievai_user`
+- Plan: Free
 
-In Render Web Service dashboard, add these to "Environment":
+⏳ **Wait 5-10 minutes for database to initialize**
+
+## ⚠️ 5️⃣ CRITICAL: Add DATABASE_URL
+
+1. Go to PostgreSQL service → "Connections"
+2. Copy the **Internal Database URL**
+3. Go to Web Service → "Environment"
+4. Add new variable:
+   - Key: `DATABASE_URL`
+   - Value: Paste the URL you copied
+5. Click "Save"
+
+## 6️⃣ Redeploy
+
+1. Go back to Web Service
+2. Click "Manual Deploy" → "Latest"
+3. Wait for the deployment to finish (watch logs)
+
+## 7️⃣ Add More Environment Variables
+
+Go to Web Service → "Environment" and add:
 
 ```
-FLASK_ENV=production
 SECRET_KEY=<run: python -c "import secrets; print(secrets.token_urlsafe(50))">
 JWT_SECRET_KEY=<run: python -c "import secrets; print(secrets.token_urlsafe(50))">
-DATABASE_URL=<copy from PostgreSQL service>
-AI_PROVIDER=gemini
 GEMINI_API_KEY=<from https://aistudio.google.com/app/apikey>
+FLASK_ENV=production
+AI_PROVIDER=gemini
 ```
 
-## 6️⃣ Wait for Deploy
-
-- Watch the build logs
-- Once green, your app is live at: `https://your-service-name.onrender.com`
-
-## 7️⃣ Test It
-
-1. Visit `https://your-service-name.onrender.com`
-2. Create an account
-3. Test AI matching
+Then redeploy again.
 
 ## ✅ Done!
 
-Your app is now live and connected to a PostgreSQL database! 🎉
+Your app is now live at: `https://your-service-name.onrender.com` 🎉
+
+**Login with:**
+- Email: `admin@example.com`
+- Password: `admin123`
 
 ---
 
-**Need help?** See [DEPLOYMENT.md](DEPLOYMENT.md) for detailed troubleshooting.
+**Having issues?** See [DEPLOYMENT.md](DEPLOYMENT.md) - Full Troubleshooting Guide
+

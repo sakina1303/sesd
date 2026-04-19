@@ -18,8 +18,6 @@ services:
         generateValue: true
       - key: JWT_SECRET_KEY
         generateValue: true
-      - key: DATABASE_URL
-        value: postgresql://user:password@localhost:5432/retrievai
       - key: FLASK_ENV
         value: production
       - key: AI_PROVIDER

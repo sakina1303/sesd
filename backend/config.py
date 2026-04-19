@@ -8,10 +8,15 @@ class Config:
     JWT_ACCESS_TOKEN_EXPIRES = timedelta(hours=24)
     
     # Database Configuration
-    SQLALCHEMY_DATABASE_URI = os.environ.get(
-        'DATABASE_URL', 
-        'sqlite:///lost_and_found.db'
-    )
+    DATABASE_URL = os.environ.get('DATABASE_URL', 'sqlite:///lost_and_found.db')
+    
+    # Handle Render PostgreSQL SSL requirement
+    if DATABASE_URL and DATABASE_URL.startswith('postgresql://'):
+        # Add SSL mode if not already present
+        if 'sslmode=' not in DATABASE_URL:
+            DATABASE_URL += '?sslmode=require'
+    
+    SQLALCHEMY_DATABASE_URI = DATABASE_URL
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     
     # File Upload Configuration
